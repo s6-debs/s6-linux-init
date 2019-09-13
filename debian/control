@@ -1,0 +1,40 @@
+Source: s6-linux-init
+Section: admin
+Priority: optional
+Maintainer: multiplexd <multi@in-addr.xyz>
+Uploaders: multiplexd <multi@in-addr.xyz>
+Build-Depends:
+ debhelper (>= 10),
+ quilt,
+ libskarnet-dev (>= 2.8.1.0),
+ libexecline-dev (>= 2.5.1.0),
+ libs6-dev (>= 2.8.0.1)
+Standards-Version: 3.9.8
+Homepage: https://skarnet.org/software/s6-linux-init/
+
+Package: s6-linux-init
+Architecture: any
+Section: admin
+Depends: ${misc:Depends}, ${shlibs:Depends}, execline (>= 2.5.1.0), s6 (>= 2.8.0.1)
+Description: A tool to automate the creation of suitable stage 1 init binaries for s6-based Linux systems
+ s6-linux-init is a set of minimalistic tools to create a s6-based init
+ system, including a /sbin/init binary, on a Linux kernel. The resulting
+ architecture follows the Unix philosophy as closely as possible, and is
+ fully dedicated to the s6 way of managing a system. Nevertheless, the
+ architecture is fully compliant with various empirical and historical
+ specifications.
+
+Package: s6-linux-init-dev
+Architecture: any
+Multi-Arch: same
+Section: devel
+Depends: ${misc:Depends}
+Description: A tool to automate the creation of suitable stage 1 init binaries for s6-based Linux systems (development files)
+ s6-linux-init is a set of minimalistic tools to create a s6-based init
+ system, including a /sbin/init binary, on a Linux kernel. The resulting
+ architecture follows the Unix philosophy as closely as possible, and is
+ fully dedicated to the s6 way of managing a system. Nevertheless, the
+ architecture is fully compliant with various empirical and historical
+ specifications.
+ .
+ This package contains the s6-linux-init development files.

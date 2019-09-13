@@ -1,0 +1,5 @@
+s6-linux-init (1.0.2.1-1) stable; urgency=medium
+
+  * Initial release.
+
+ -- multiplexd <multi@in-addr.xyz>  Fri, 13 Sep 2019 15:10:52 +0100
