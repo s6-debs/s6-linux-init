@@ -103,6 +103,7 @@ static inline void prepare_shutdown (buffer *b, tain_t *deadline, unsigned int *
   if (r == -1) strerr_diefu1sys(111, "read from pipe") ;
   if (r < TAIN_PACK + 4) strerr_dief1x(101, "bad shutdown protocol") ;
   tain_unpack(pack, deadline) ;
+  tain_add_g(deadline, deadline) ;
   uint32_unpack_big(pack + TAIN_PACK, &u) ;
   if (u && u <= 300000) *grace_time = u ;
 }
@@ -143,6 +144,7 @@ static inline void prepare_stage4 (char const *basedir, char what)
   buffer b ;
   int fd ;
   char buf[512] ;
+  size_t sabase = satmp.len ;
   unlink_void(STAGE4_FILE ".new") ;
   fd = open_excl(STAGE4_FILE ".new") ;
   if (fd == -1) strerr_diefu3sys(111, "open ", STAGE4_FILE ".new", " for writing") ;
@@ -152,10 +154,15 @@ static inline void prepare_stage4 (char const *basedir, char what)
     "#!" EXECLINE_SHEBANGPREFIX "execlineb -P\n\n"
     EXECLINE_EXTBINPREFIX "foreground { "
     S6_LINUX_INIT_BINPREFIX "s6-linux-init-umountall }\n"
+    EXECLINE_EXTBINPREFIX "foreground { ") < 0
+   || !string_quote(&satmp, basedir, strlen(basedir))
+   || buffer_put(&b, satmp.s + sabase, satmp.len - sabase) < 0
+   || buffer_puts(&b, "/scripts/" STAGE4 " }\n"
     S6_LINUX_INIT_BINPREFIX "s6-linux-init-hpr -f -") < 0
    || buffer_put(&b, &what, 1) < 0
    || buffer_putsflush(&b, "\n") < 0)
     strerr_diefu2sys(111, "write to ", STAGE4_FILE ".new") ;
+  satmp.len = sabase ;
   if (fchmod(fd, S_IRWXU) == -1)
     strerr_diefu2sys(111, "fchmod ", STAGE4_FILE ".new") ;
   fd_close(fd) ;
@@ -256,7 +263,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   if (sig_ignore(SIGPIPE) == -1)
     strerr_diefu1sys(111, "sig_ignore SIGPIPE") ;
   buffer_init(&b, &buffer_read, fdr, buf, 64) ;
-  tain_now_g() ;
+  tain_now_set_stopwatch_g() ;
   tain_add_g(&deadline, &tain_infinite_relative) ;
 
   for (;;)
@@ -294,6 +301,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
   kill(-1, SIGTERM) ;
   kill(-1, SIGCONT) ;
   tain_from_millisecs(&deadline, grace_time) ;
+  tain_now_g() ;
   tain_add_g(&deadline, &deadline) ;
   deepsleepuntil_g(&deadline) ;
   sync() ;
