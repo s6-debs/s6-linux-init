@@ -6,16 +6,16 @@ Uploaders: multiplexd <multi@in-addr.xyz>
 Build-Depends:
  debhelper (>= 10),
  quilt,
- libskarnet-dev (>= 2.9.0.0),
- libexecline-dev (>= 2.5.2.0),
- libs6-dev (>= 2.9.0.0)
+ libskarnet-dev (>= 2.9.1.0),
+ libexecline-dev (>= 2.5.3.0),
+ libs6-dev (>= 2.9.0.1)
 Standards-Version: 3.9.8
 Homepage: https://skarnet.org/software/s6-linux-init/
 
 Package: s6-linux-init
 Architecture: any
 Section: admin
-Depends: ${misc:Depends}, ${shlibs:Depends}, execline (>= 2.5.2.0), s6 (>= 2.9.0.0)
+Depends: ${misc:Depends}, ${shlibs:Depends}, execline (>= 2.5.3.0), s6 (>= 2.9.0.1)
 Description: A tool to automate the creation of suitable stage 1 init binaries for s6-based Linux systems
  s6-linux-init is a set of minimalistic tools to create a s6-based init
  system, including a /sbin/init binary, on a Linux kernel. The resulting
