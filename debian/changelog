@@ -1,3 +1,9 @@
+s6-linux-init (1.0.4.0-1) stable; urgency=medium
+
+  * New upstream release.
+
+ -- multiplexd <multi@in-addr.xyz>  Sun, 15 Mar 2020 15:16:10 +0000
+
 s6-linux-init (1.0.3.1-1) stable; urgency=medium
 
   * New upstream release.
