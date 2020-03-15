@@ -10,6 +10,8 @@
 #include <skalibs/stralloc.h>
 #include <skalibs/skamisc.h>
 
+#include <s6-linux-init/config.h>
+
 #define MAXLINES 99
 
 #define EXCLUDEN 3
@@ -21,12 +23,10 @@ int main (int argc, char const *const *argv)
   unsigned int got[EXCLUDEN] = { 0, 0, 0 } ;
   stralloc sa = STRALLOC_ZERO ;
   unsigned int line = 0 ;
-  FILE *fp ;
   int e = 0 ;
-
+  FILE *fp = setmntent("/proc/mounts", "r") ;
   PROG = "s6-linux-init-umountall" ;
 
-  fp = setmntent("/proc/mounts", "r") ;
   if (!fp) strerr_diefu1sys(111, "open /proc/mounts") ;
   for (;;)
   {
@@ -35,6 +35,7 @@ int main (int argc, char const *const *argv)
     errno = 0 ;
     p = getmntent(fp) ;
     if (!p) break ;
+    if (!strcmp(p->mnt_dir, S6_LINUX_INIT_TMPFS)) continue ;
     for (; i < EXCLUDEN ; i++)
       if (!strcmp(p->mnt_type, exclude_type[i]))
       {
