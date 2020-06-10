@@ -2,7 +2,6 @@ Source: s6-linux-init
 Section: admin
 Priority: optional
 Maintainer: multiplexd <multi@in-addr.xyz>
-Uploaders: multiplexd <multi@in-addr.xyz>
 Build-Depends:
  debhelper (>= 10),
  quilt,

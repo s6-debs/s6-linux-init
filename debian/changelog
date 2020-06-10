@@ -1,3 +1,9 @@
+s6-linux-init (1.0.4.0-2) stable; urgency=low
+
+  * Clean up source package and metadata
+
+ -- multiplexd <multi@in-addr.xyz>  Wed, 10 Jun 2020 21:06:23 +0100
+
 s6-linux-init (1.0.4.0-1) stable; urgency=medium
 
   * New upstream release.
