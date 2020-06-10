@@ -162,7 +162,7 @@ static int s6_svscan_log_script (buffer *b, char const *data)
     satmp.len = sabase ;
     if (buffer_puts(b, "\n") < 0) return 0 ;
   }
-  if (buffer_puts(b, "s6-log -bpd3 -- ") < 0) return 0 ;
+  if (buffer_puts(b, S6_EXTBINPREFIX "s6-log -bpd3 -- ") < 0) return 0 ;
   if (console && buffer_puts(b, "1 ") < 0) return 0 ;
   if (timestamp_style & 1 && buffer_puts(b, "t ") < 0
    || timestamp_style & 2 && buffer_puts(b, "T ") < 0
@@ -211,7 +211,7 @@ static int runleveld_script (buffer *b, char const *data)
     EXECLINE_EXTBINPREFIX "fdmove -c 2 1\n"
     EXECLINE_EXTBINPREFIX "fdmove 1 3\n"
     S6_EXTBINPREFIX "s6-ipcserver -1 -a 0700 -c 1 -- " RUNLEVELD_SOCKET "\n"
-    S6_EXTBINPREFIX "s6-sudod -0 -1 -2 -t 30000 --\n") < 0
+    S6_EXTBINPREFIX "s6-sudod -dt30000 --\n") < 0
    || !string_quote(&satmp, robase, strlen(robase))) return 0 ;
   if (buffer_put(b, satmp.s + sabase, satmp.len - sabase) < 0) goto err ;
   satmp.len = sabase ;
