@@ -1,3 +1,9 @@
+s6-linux-init (1.0.5.1-1) stable; urgency=medium
+
+  * New upstream release.
+
+ -- multi <multi@in-addr.xyz>  Sun, 27 Dec 2020 07:34:24 +0000
+
 s6-linux-init (1.0.4.1-2) stable; urgency=high
 
   * Bump dependency on s6 to 2.9.2.0 to fix s6-linux-init-runleveld
