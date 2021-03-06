@@ -1,0 +1,8 @@
+s6-linux-init (1.0.6.1-1) buster; urgency=medium
+
+  * It is recommended, though not necessary, to recreate any run-image
+    directories created with s6-linux-init-maker after installing this
+    update. Old images will continue to boot, however signals sent to init may
+    not be handled correctly.
+
+ -- multi <multi@in-addr.xyz>  Sat, 06 Mar 2021 14:14:06 +0000
