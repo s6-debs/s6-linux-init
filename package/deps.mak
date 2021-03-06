@@ -10,10 +10,12 @@ src/init/s6-linux-init.o src/init/s6-linux-init.lo: src/init/s6-linux-init.c src
 src/lib/s6_linux_init_logouthook.o src/lib/s6_linux_init_logouthook.lo: src/lib/s6_linux_init_logouthook.c src/include-local/initctl.h src/include/s6-linux-init/s6-linux-init.h
 src/misc/s6-linux-init-echo.o src/misc/s6-linux-init-echo.lo: src/misc/s6-linux-init-echo.c
 src/misc/s6-linux-init-logouthookd.o src/misc/s6-linux-init-logouthookd.lo: src/misc/s6-linux-init-logouthookd.c
+src/misc/s6-linux-init-nuke.o src/misc/s6-linux-init-nuke.lo: src/misc/s6-linux-init-nuke.c
 src/misc/s6-linux-init-umountall.o src/misc/s6-linux-init-umountall.lo: src/misc/s6-linux-init-umountall.c src/include/s6-linux-init/config.h
 src/shutdown/hpr_confirm_hostname.o src/shutdown/hpr_confirm_hostname.lo: src/shutdown/hpr_confirm_hostname.c src/shutdown/hpr.h
 src/shutdown/hpr_shutdown.o src/shutdown/hpr_shutdown.lo: src/shutdown/hpr_shutdown.c src/shutdown/hpr.h
 src/shutdown/hpr_wall.o src/shutdown/hpr_wall.lo: src/shutdown/hpr_wall.c src/shutdown/hpr.h
+src/shutdown/hpr_wallv.o src/shutdown/hpr_wallv.lo: src/shutdown/hpr_wallv.c src/shutdown/hpr.h
 src/shutdown/s6-linux-init-hpr.o src/shutdown/s6-linux-init-hpr.lo: src/shutdown/s6-linux-init-hpr.c src/include-local/defaults.h src/shutdown/hpr.h
 src/shutdown/s6-linux-init-shutdown.o src/shutdown/s6-linux-init-shutdown.lo: src/shutdown/s6-linux-init-shutdown.c src/include-local/defaults.h src/shutdown/hpr.h src/include-local/initctl.h
 src/shutdown/s6-linux-init-shutdownd.o src/shutdown/s6-linux-init-shutdownd.lo: src/shutdown/s6-linux-init-shutdownd.c src/include-local/defaults.h src/shutdown/hpr.h src/include-local/initctl.h src/include/s6-linux-init/config.h
@@ -35,12 +37,14 @@ s6-linux-init-echo: EXTRA_LIBS := -lskarnet
 s6-linux-init-echo: src/misc/s6-linux-init-echo.o
 s6-linux-init-logouthookd: EXTRA_LIBS := -lskarnet ${SYSCLOCK_LIB} ${SOCKET_LIB}
 s6-linux-init-logouthookd: src/misc/s6-linux-init-logouthookd.o ${LIBUTMPS}
+s6-linux-init-nuke: EXTRA_LIBS :=
+s6-linux-init-nuke: src/misc/s6-linux-init-nuke.o
 s6-linux-init-umountall: EXTRA_LIBS := -lskarnet
 s6-linux-init-umountall: src/misc/s6-linux-init-umountall.o
 ifeq ($(strip $(STATIC_LIBS_ARE_PIC)),)
-libhpr.a.xyzzy: src/shutdown/hpr_shutdown.o src/shutdown/hpr_wall.o src/shutdown/hpr_confirm_hostname.o
+libhpr.a.xyzzy: src/shutdown/hpr_shutdown.o src/shutdown/hpr_wall.o src/shutdown/hpr_wallv.o src/shutdown/hpr_confirm_hostname.o
 else
-libhpr.a.xyzzy: src/shutdown/hpr_shutdown.lo src/shutdown/hpr_wall.lo src/shutdown/hpr_confirm_hostname.lo
+libhpr.a.xyzzy: src/shutdown/hpr_shutdown.lo src/shutdown/hpr_wall.lo src/shutdown/hpr_wallv.lo src/shutdown/hpr_confirm_hostname.lo
 endif
 s6-linux-init-hpr: EXTRA_LIBS := -lskarnet ${SYSCLOCK_LIB} ${SOCKET_LIB}
 s6-linux-init-hpr: src/shutdown/s6-linux-init-hpr.o libhpr.a.xyzzy ${LIBUTMPS}

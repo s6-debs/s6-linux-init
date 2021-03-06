@@ -43,6 +43,7 @@
 #define DOTPREFIXLEN (sizeof(DOTPREFIX) - 1)
 #define DOTSUFFIX ":XXXXXX"
 #define DOTSUFFIXLEN (sizeof(DOTSUFFIX) - 1)
+#define CONTAINERDIR S6_LINUX_INIT_TMPFS "/" CONTAINER_RESULTS
 
 #define USAGE "s6-linux-init-shutdownd [ -c basedir ] [ -g gracetime ] [ -C ] [ -B ]"
 #define dieusage() strerr_dieusage(100, USAGE)
@@ -145,13 +146,11 @@ static inline void handle_fifo (buffer *b, char *what, tain_t *deadline, unsigne
 
 static void restore_console (void)
 {
-  if (!inns && !nologger)
-  {
-    fd_close(1) ;
-    if (open("/dev/console", O_WRONLY) != 1)
-      strerr_diefu1sys(111, "open /dev/console for writing") ;
-    if (fd_copy(2, 1) < 0) strerr_warnwu1sys("fd_copy") ;
-  }
+  fd_close(1) ;
+  if (open("/dev/console", O_WRONLY) != 1)
+    strerr_warnwu1sys("open /dev/console for writing") ;
+  else if (fd_copy(2, 1) < 0)
+    strerr_warnwu1sys("fd_copy") ;
 }
 
 static inline void prepare_stage4 (char const *basedir, char what)
@@ -160,6 +159,14 @@ static inline void prepare_stage4 (char const *basedir, char what)
   int fd ;
   char buf[512] ;
   size_t sabase = satmp.len ;
+  if (inns)
+  {
+    char s[2] = { what, '\n' } ;
+    if (mkdir(CONTAINERDIR, 0755) < 0 && errno != EEXIST)
+      strerr_diefu1sys(111, "mkdir " CONTAINERDIR) ;
+    if (!openwritenclose_unsafe(CONTAINERDIR "/haltcode", s, 2))
+      strerr_diefu1sys(111, "write to " CONTAINERDIR "/haltcode") ;
+  }
   unlink_void(STAGE4_FILE ".new") ;
   fd = open_excl(STAGE4_FILE ".new") ;
   if (fd == -1) strerr_diefu3sys(111, "open ", STAGE4_FILE ".new", " for writing") ;
@@ -169,14 +176,13 @@ static inline void prepare_stage4 (char const *basedir, char what)
     if (buffer_puts(&b, "#!"
        EXECLINE_SHEBANGPREFIX "execlineb -P\n\n"
        EXECLINE_EXTBINPREFIX "foreground { "
-       S6_EXTBINPREFIX "s6-svc -Ox -- . }\n"
+       S6_EXTBINPREFIX "s6-svc -x -- . }\n"
        EXECLINE_EXTBINPREFIX "background\n{\n  ") < 0
      || (!nologger && buffer_puts(&b,
        EXECLINE_EXTBINPREFIX "foreground { "
-       S6_EXTBINPREFIX "s6-svc -Xh -- " SCANPREFIX LOGGER_SERVICEDIR " }\n  ") < 0)
-     || buffer_puts(&b, S6_EXTBINPREFIX "s6-svscanctl -") < 0
-     || buffer_put(&b, what == 'h' ? "s" : &what, 1) < 0
-     || buffer_putsflush(&b, "b -- " SCANDIRFULL "\n}\n") < 0)
+       S6_EXTBINPREFIX "s6-svc -xc -- " SCANPREFIX LOGGER_SERVICEDIR " }\n  ") < 0)
+     || buffer_puts(&b,
+       S6_EXTBINPREFIX "s6-svscanctl -b -- " SCANDIRFULL "\n}\n") < 0)
       strerr_diefu2sys(111, "write to ", STAGE4_FILE ".new") ;
   }
   else
@@ -281,8 +287,22 @@ int main (int argc, char const *const *argv, char const *const *envp)
  /* if we're in stage 4, exec it immediately */
   {
     char const *stage4_argv[2] = { "./" STAGE4_FILE, 0 } ;
-    restore_console() ;
-    execve(stage4_argv[0], (char **)stage4_argv, (char *const *)envp) ;
+    if (!inns && !nologger)
+    {
+      int fd[2] ;
+      int e ;
+      fd[0] = fcntl(1, F_DUPFD_CLOEXEC, 0) ;
+      if (fd[0] < 0) strerr_diefu2sys(111, "dup std", "out") ;
+      fd[1] = fcntl(2, F_DUPFD_CLOEXEC, 0) ;
+      if (fd[1] < 0) strerr_diefu2sys(111, "dup std", "err") ;
+      restore_console() ;
+      execve(stage4_argv[0], (char **)stage4_argv, (char *const *)envp) ;
+      e = errno ;
+      if (fd_move2(1, fd[0], 2, fd[1]) < 0) strerr_warnwu1sys("restore fds") ;
+      errno = e ;
+    }
+    else
+      execve(stage4_argv[0], (char **)stage4_argv, (char *const *)envp) ;
     if (errno != ENOENT)
       strerr_warnwu2sys("exec ", stage4_argv[0]) ;
   }
@@ -318,7 +338,7 @@ int main (int argc, char const *const *argv, char const *const *envp)
 
   fd_close(fdw) ;
   fd_close(fdr) ;
-  restore_console() ;
+  if (!inns && !nologger) restore_console() ;
 
 
  /* The end is coming! */

@@ -51,7 +51,7 @@ empirical and historical specifications. For instance, it provides:
 kernel command line </li>
  <li> sysvinit-like commands to shut the system down, including a
 <tt>shutdown</tt> command that follows the
-<a href="http://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/shutdown.html">LSB specification</a> </li>
+<a href="https://refspecs.linuxbase.org/LSB_3.0.0/LSB-PDA/LSB-PDA/shutdown.html">LSB specification</a> </li>
 </ul>
 
 <hr />
@@ -59,7 +59,7 @@ kernel command line </li>
 <ul>
  <li> <a href="why.html">Why</a> s6-linux-init&nbsp;? </li>
  <li> <a href="overview.html">An overview</a> of s6-linux-init </li>
- <li> <a href="quickstart.html">A quickstart guide</a> for the impatient </li>
+ <li> <a href="quickstart.html">A quickstart guide</a> for the impatient, along with a FAQ </li>
 </ul>
 
 <hr />
@@ -72,16 +72,16 @@ kernel command line </li>
  <li> A Linux-based system with a standard C development environment </li>
  <li> GNU make, version 3.81 or later </li>
  <li> <a href="//skarnet.org/software/skalibs/">skalibs</a> version
-2.9.3.0 or later. It's a build-time requirement. It's also a run-time
+2.10.0.2 or later. It's a build-time requirement. It's also a run-time
 requirement (for <a href="s6-linux-init-maker.html">s6-linux-init-maker</a>)
 as well as a boot-time requirement (i.e. a run-time requirement for the
 programs used when you boot a system created with
 <a href="s6-linux-init-maker.html">s6-linux-init-maker</a>) if you link
 against the shared version of the skalibs library. </li>
  <li> <a href="//skarnet.org/software/execline/">execline</a> version
-2.6.1.1 or later. It is a build-time and boot-time requirement. </li>
+2.7.0.1 or later. It is a build-time and boot-time requirement. </li>
  <li> <a href="//skarnet.org/software/s6/">s6</a> version
-2.9.2.0 or later. It is a build-time and boot-time requirement. </li>
+2.10.0.2 or later. It is a build-time and boot-time requirement. </li>
 </ul>
 
 <p>
@@ -92,10 +92,10 @@ against the shared version of the skalibs library. </li>
  <li> If you're using <a href="https://www.musl-libc.org/">musl</a> and
 want nsswitch-like functionality:
 <a href="//skarnet.org/software/nsss/">nsss</a> version
-0.0.2.2 or later (build-time and boot-time) </li>
+0.1.0.0 or later (build-time and boot-time) </li>
  <li> If you want secure utmp functionality:
 <a href="//skarnet.org/software/utmps/">utmps</a> version
-0.0.3.2 or later (build-time and boot-time) </li>
+0.1.0.0 or later (build-time and boot-time) </li>
 </ul>
 
 <p>
@@ -108,14 +108,14 @@ all the other packages against the <em>static</em> version of libskarnet.
 
 <p>
  s6-linux-init is free software. It is available under the
-<a href="http://opensource.org/licenses/ISC">ISC license</a>.
+<a href="https://opensource.org/licenses/ISC">ISC license</a>.
 </p>
 
 <h3> Download </h3>
 
 <ul>
  <li> The current released version of s6-linux-init is
-<a href="s6-linux-init-1.0.5.1.tar.gz">1.0.5.1</a>. </li>
+<a href="s6-linux-init-1.0.6.1.tar.gz">1.0.6.1</a>. </li>
  <li> Alternatively, you can checkout a copy of the
 <a href="//git.skarnet.org/cgi-bin/cgit.cgi/s6-linux-init/">s6-linux-init
 git repository</a>:
@@ -168,6 +168,7 @@ permanent error (such as a misuse).
 <li><a href="s6-linux-init-telinit.html">The <tt>s6-linux-init-telinit</tt> program</a></li>
 <li><a href="s6-linux-init-logouthookd.html">The <tt>s6-linux-init-logouthookd</tt> program</a></li>
 <li><a href="s6-linux-init-echo.html">The <tt>s6-linux-init-echo</tt> program</a></li>
+<li><a href="s6-linux-init-nuke.html">The <tt>s6-linux-init-nuke</tt> program</a></li>
 <li><a href="s6-linux-init-umountall.html">The <tt>s6-linux-init-umountall</tt> program</a></li>
 </ul>
 
